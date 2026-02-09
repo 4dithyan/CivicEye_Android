@@ -1,3 +1,3 @@
 ## 🎬 Project Demo
 
-[![Demo Preview](demo/preview.png)](demo/Demo%20Video.mp4)
+▶️ [Watch Demo Video](https://raw.githubusercontent.com/4dithyan/CivicEye_Android/main/demo/Demo%20Video.mp4)
