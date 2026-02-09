@@ -1,5 +1,3 @@
 ## 🎬 Project Demo
 
-Click below to watch the demo:
-
-▶️ [Watch Demo Video](demo/Demo%20Video.mp4)
+[![Demo Preview](demo/preview.png)](demo/Demo%20Video.mp4)
