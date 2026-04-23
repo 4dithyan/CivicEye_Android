@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Management - CivicEye</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .staff-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .staff-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            margin: 0 auto 16px;
+            object-fit: cover;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            position: absolute;
+            top: 24px;
+            right: calc(50% - 40px);
+        }
+
+        .status-online {
+            background-color: #10b981;
+        }
+
+        .status-offline {
+            background-color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div>
+                    <h1>Staff Team</h1>
+                    <p style="color:var(--secondary);">Manage field officers and assignments</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal()">+ Add New Staff</button>
+            </div>
+
+            <div class="staff-grid" id="staffGrid">
+                <!-- Staff Cards Injected Here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="staffModal">
+        <div class="modal-content">
+            <div class="card-header">
+                <h3 id="modalTitle">Add Staff Member</h3>
+                <button onclick="closeModal()" class="btn btn-sm btn-outline">✕</button>
+            </div>
+            <form id="staffForm" onsubmit="handleSave(event)">
+                <input type="hidden" id="staffId">
+                <div style="display:grid; gap:16px;">
+                    <div>
+                        <label class="stat-label">Full Name</label>
+                        <input type="text" id="name" class="search-bar" style="width:100%; border:1px solid #e2e8f0;"
+                            required>
+                    </div>
+                    <div>
+                        <label class="stat-label">Email</label>
+                        <input type="email" id="email" class="search-bar" style="width:100%; border:1px solid #e2e8f0;"
+                            required>
+                    </div>
+                    <div>
+                        <label class="stat-label">Phone Number (10 digits)</label>
+                        <input type="tel" id="staffPhone" class="search-bar"
+                            style="width:100%; border:1px solid #e2e8f0;" placeholder="9876543210" maxlength="10">
+                    </div>
+                    <div>
+                        <label class="stat-label">Department</label>
+                        <select id="dept" class="search-bar" style="width:100%; border:1px solid #e2e8f0;">
+                            <!-- Depts Injected -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="stat-label">Password</label>
+                        <input type="password" id="password" class="search-bar"
+                            style="width:100%; border:1px solid #e2e8f0;" placeholder="Leave empty if existing">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="justify-content:center;">Save Staff</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+
+    <script>
+        let staffList = [], departments = [];
+
+        function loadData() {
+            // Real-time Departments (Mostly static but good for sync)
+            db.collection('departments').onSnapshot(dSnap => {
+                departments = dSnap.docs.map(d => ({ ...d.data(), id: d.id }));
+
+                // Fill Filter/Select
+                const deptSelect = document.getElementById('dept');
+                if (deptSelect) {
+                    deptSelect.innerHTML = departments.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+                }
+                renderStaff();
+            });
+
+            // Real-time Staff
+            db.collection('users').where('role', '==', 'staff').onSnapshot(sSnap => {
+                staffList = sSnap.docs.map(d => ({ ...d.data(), id: d.id }));
+                renderStaff();
+            });
+        }
+
+        function renderStaff() {
+            const grid = document.getElementById('staffGrid');
+            grid.innerHTML = staffList.map(s => {
+                let statusColor = '#94a3b8'; // Grey (Offline/Unknown)
+                let statusText = s.availabilityStatus || 'Offline';
+
+                if (statusText === 'Available') statusColor = '#10b981'; // Green
+                else if (statusText === 'On Duty') statusColor = '#3b82f6'; // Blue
+                else if (statusText === 'Busy') statusColor = '#eab308'; // Yellow
+                else if (statusText === 'Leave') statusColor = '#ef4444'; // Red
+
+                return `
+                <div class="card staff-card">
+
+                    
+                    <h3 class="card-title">${s.name}</h3>
+                    <p style="color:var(--primary); font-size:0.9rem;">${getDeptName(s.departmentId)}</p>
+                    
+                    <div style="margin-top:8px; margin-bottom:16px;">
+                        <span class="badge" style="background:${statusColor}20; color:${statusColor}; border:1px solid ${statusColor}40;">
+                            ${statusText}
+                        </span>
+                    </div>
+                    
+                    <div class="stats-grid" style="margin-bottom:16px;">
+                        <div style="background:#f8fafc; padding:8px; border-radius:8px; width:100%;">
+                            <div style="font-weight:700;">${s.issuesResolved || 0}</div>
+                            <small class="stat-label">Resolved</small>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-sm btn-outline" onclick="editStaff('${s.id}')">Manage Profile</button>
+                </div>
+            `}).join('');
+        }
+
+        function getDeptName(id) {
+            const d = departments.find(x => x.id === id);
+            return d ? d.name : 'Unassigned';
+        }
+
+        function openModal() {
+            document.getElementById('staffForm').reset();
+            document.getElementById('staffId').value = '';
+            document.getElementById('modalTitle').textContent = 'Add New Staff';
+            document.getElementById('staffModal').classList.add('active');
+        }
+
+        function editStaff(id) {
+            const s = staffList.find(x => x.id === id);
+            if (!s) return;
+
+            document.getElementById('staffId').value = s.id;
+            document.getElementById('name').value = s.name;
+            document.getElementById('email').value = s.email;
+            document.getElementById('staffPhone').value = s.phone || '';
+            document.getElementById('dept').value = s.departmentId || '';
+            document.getElementById('modalTitle').textContent = 'Edit Staff';
+            document.getElementById('staffModal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('staffModal').classList.remove('active'); }
+
+        async function handleSave(e) {
+            e.preventDefault();
+            const id = document.getElementById('staffId').value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('staffPhone').value;
+            const dept = document.getElementById('dept').value;
+            const pwd = document.getElementById('password').value;
+
+            // Validation
+            if (!/^\d{10}$/.test(phone)) {
+                adminLogic.toast("Phone number must be exactly 10 digits", "error");
+                return;
+            }
+
+            try {
+                if (id) {
+                    // Update existing (Firestore Only)
+                    const updates = { name, phone, departmentId: dept };
+                    await db.collection('users').doc(id).update(updates);
+                    adminLogic.toast("Staff profile updated!", "success");
+                    closeModal();
+                } else {
+                    // Create New Staff (Using Secondary App to prevent Admin logout)
+                    const secondaryAppName = "SecondaryApp-" + new Date().getTime(); // Unique name
+                    const secondaryApp = firebase.initializeApp(firebaseConfig, secondaryAppName);
+
+                    try {
+                        const userCred = await secondaryApp.auth().createUserWithEmailAndPassword(email, pwd);
+                        const uid = userCred.user.uid;
+
+                        // Use Main DB (Admin Auth) to save details
+                        await db.collection('users').doc(uid).set({
+                            name,
+                            email,
+                            phone,
+                            role: 'staff',
+                            departmentId: dept,
+                            issuesResolved: 0,
+                            availabilityStatus: 'Offline',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+
+                        adminLogic.toast("Staff account created successfully!", "success");
+
+                        // Cleanup
+                        await secondaryApp.auth().signOut();
+                        await secondaryApp.delete();
+
+                        closeModal();
+                        loadData();
+
+                    } catch (e) {
+                        console.error(e);
+                        // Cleanup on error
+                        try { await secondaryApp.delete(); } catch (err) { }
+                        adminLogic.toast("Failed to create account: " + e.message, "error");
+                    }
+                }
+            } catch (error) {
+                adminLogic.toast(error.message, "error");
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Brand Colors -->\r
+    <color name="brand_primary">#1E3A5F</color>\r
+    <color name="brand_primary_dark">#152A45</color>\r
+    <color name="brand_primary_light">#2E5A8F</color>\r
+    <color name="brand_primary_bg">#E8F2FA</color>
+    
+    <!-- Civilian Theme (Sea Green) -->
+    <color name="civilian_primary">#2E8B57</color>
+    <color name="civilian_primary_dark">#1F6B42</color>
+    <color name="civilian_primary_light">#4CAF7C</color>
+    <color name="civilian_primary_bg">#E8F5E9</color>
+    
+    <!-- Staff Theme (Amber) -->
+    <color name="staff_primary">#D97706</color>
+    <color name="staff_primary_dark">#B45309</color>
+    <color name="staff_primary_light">#F59E0B</color>
+    
+    <!-- Admin Theme (Violet) -->
+    <color name="admin_primary">#7C3AED</color>
+    <color name="admin_primary_dark">#5B21B6</color>
+    <color name="admin_primary_light">#8B5CF6</color>
+    
+    <!-- Background & Surface -->
+    <color name="bg_light">#F8FAFC</color>
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F1F5F9</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#1F2937</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_hint">#9CA3AF</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#16A34A</color>
+    <color name="success_bg">#DCFCE7</color>
+    <color name="warning">#F59E0B</color>
+    <color name="warning_bg">#FEF3C7</color>
+    <color name="error">#DC2626</color>
+    <color name="error_bg">#FEE2E2</color>
+    <color name="info">#3B82F6</color>
+    <color name="info_bg">#DBEAFE</color>
+    
+    <!-- Issue Status Colors -->
+    <color name="status_pending">#F59E0B</color>
+    <color name="status_verified">#16A34A</color>
+    <color name="status_in_progress">#3B82F6</color>
+    <color name="status_resolved">#16A34A</color>
+    <color name="status_rejected">#DC2626</color>
+    
+    <color name="white">#FFFFFF</color>
+    
+    <!-- Availability Status Chips -->
+    <color name="bg_chip_status_green">#DCFCE7</color>
+    <color name="text_status_green">#166534</color>
+    
+    <color name="bg_chip_status_blue">#DBEAFE</color>
+    <color name="text_status_blue">#1E40AF</color>
+    
+    <color name="bg_chip_status_yellow">#FEF3C7</color>
+    <color name="text_status_yellow">#92400E</color>
+    
+    <color name="bg_chip_status_red">#FEE2E2</color>
+    <color name="text_status_red">#991B1B</color>
+
+    <!-- Border & Divider -->
+    <color name="border">#E5E7EB</color>
+    <color name="divider">#F3F4F6</color>
+    
+    <!-- Ripple & Overlay -->
+    <color name="ripple_light">#1A000000</color>
+    <color name="ripple_dark">#1AFFFFFF</color>
+    <color name="overlay">#80000000</color>
+</resources>

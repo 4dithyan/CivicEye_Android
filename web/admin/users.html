@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management - CivicEye</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div>
+                    <h1 class="header-title">Citizens</h1>
+                    <p class="text-secondary">Manage community members</p>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card" style="padding:16px;">
+                <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                    <select id="locationFilter" class="btn btn-outline" onchange="renderTable()">
+                        <option value="">🌍 All Locations</option>
+                    </select>
+                    <div class="search-bar">
+                        <span class="material-symbols-rounded" style="color:#94a3b8;">search</span>
+                        <input type="text" id="search" placeholder="Search users..." oninput="renderTable()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        let locations = [];
+        let users = [];
+
+        async function load() {
+            // Fetch Locations if not loaded
+            if (locations.length === 0) {
+                const lSnap = await db.collection('locations').get();
+                locations = lSnap.docs.map(d => ({ ...d.data(), id: d.id }));
+
+                const locSelect = document.getElementById('locationFilter');
+                if (locSelect) {
+                    locations.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.id;
+                        option.textContent = `📍 ${loc.name}`;
+                        locSelect.appendChild(option);
+                    });
+                }
+            }
+
+            const locFilter = document.getElementById('locationFilter').value;
+
+            // Fetch Users (Real-time)
+            db.collection('users').where('role', '==', 'civilian').onSnapshot(snap => {
+                users = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+                renderTable();
+            });
+        }
+
+        function renderTable() {
+            const locFilter = document.getElementById('locationFilter').value;
+
+            const searchEl = document.getElementById('search');
+            const searchQuery = searchEl ? searchEl.value.toLowerCase() : '';
+
+            const filtered = users.filter(u => {
+                const matchesLocation = !locFilter || u.locationId === locFilter;
+                const matchesSearch = !searchQuery ||
+                    (u.name && u.name.toLowerCase().includes(searchQuery)) ||
+                    (u.email && u.email.toLowerCase().includes(searchQuery));
+                return matchesLocation && matchesSearch;
+            });
+
+            document.getElementById('tableBody').innerHTML = filtered.map(u => `
+                    <tr>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=random&color=fff" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                <strong>${u.name}</strong>
+                            </div>
+                        </td>
+                        <td>${u.email}</td>
+                        <td>${u.isBlocked ? '<span class="badge badge-danger">Blocked</span>' : '<span class="badge badge-success">Active</span>'}</td>
+                        <td>
+                            ${u.isBlocked
+                    ? `<button class="btn btn-sm btn-outline" onclick="toggleBlock('${u.id}', false)">Unblock</button>`
+                    : `<button class="btn btn-sm btn-danger" onclick="toggleBlock('${u.id}', true)">Block</button>`
+                }
+                        </td>
+                    </tr>
+                 `).join('');
+        }
+
+        async function toggleBlock(id, block) {
+            if (confirm(block ? 'Block this user?' : 'Unblock this user?')) {
+                await db.collection('users').doc(id).update({ isBlocked: block });
+                // No need to call load() as it's real-time
+            }
+        }
+        load();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Green circle background -->
+    <path
+        android:fillColor="#2E8B57"
+        android:pathData="M24,24m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0"/>
+    <!-- White location pin -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,8C18.48,8 14,12.48 14,18c0,7.5 10,22 10,22s10,-14.5 10,-22c0,-5.52 -4.48,-10 -10,-10zM24,23c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5 5,2.24 5,5 -2.24,5 -5,5z"/>
+    <!-- Green checkmark inside -->
+    <path
+        android:fillColor="#2E8B57"
+        android:pathData="M22,18l1.5,1.5 3.5,-3.5 1,1 -4.5,4.5 -2.5,-2.5z"/>
+</vector>

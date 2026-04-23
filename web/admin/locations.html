@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Locations - CivicEye</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div>
+                    <h1 class="header-title">Locations</h1>
+                    <p class="text-secondary">Manage service areas</p>
+                </div>
+                <button class="btn btn-primary" onclick="addItem()">+ Add Location</button>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Coords</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        // Reuse similar logic for Departments/Locations
+        const COL = 'locations';
+        const FIELD = 'name';
+
+        async function load() {
+            const snap = await db.collection(COL).get();
+            const list = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+            document.getElementById('tableBody').innerHTML = list.map(i => `
+                <tr>
+                    <td><strong>${i.name}</strong></td>
+                    <td>${i.latitude}, ${i.longitude}</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="del('${i.id}')">Delete</button></td>
+                </tr>
+             `).join('');
+        }
+
+        async function addItem() {
+            const name = prompt("Enter Location Name:");
+            if (!name) return;
+            // Mock coords for now
+            await db.collection(COL).add({ name, latitude: 12.97, longitude: 77.59 });
+            load();
+        }
+
+        async function del(id) {
+            if (confirm('Delete?')) { await db.collection(COL).doc(id).delete(); load(); }
+        }
+        load();
+    </script>
+</body>
+
+</html>

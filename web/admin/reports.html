@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reports - CivicEye</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .report-controls {
+            display: flex;
+            gap: 16px;
+            align-items: end;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .form-control {
+            padding: 10px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div>
+                    <h1 class="header-title">Reports</h1>
+                    <p class="text-secondary">Generate and download issue reports</p>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 24px;">
+                <h3 style="margin-bottom: 24px;">Generate Report</h3>
+
+                <div class="report-controls">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="startDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="endDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button onclick="generateReport()" class="btn btn-primary">
+                            <span class="material-symbols-rounded">picture_as_pdf</span> Download PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div id="statsPreview"
+                    style="display:none; margin-top:32px; padding-top:24px; border-top:1px solid #e2e8f0;">
+                    <h4 style="margin-bottom:16px;">Preview Stats</h4>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:16px;">
+                        <div class="stat-card" style="background:#f8fafc; padding:16px; border-radius:12px;">
+                            <div style="font-size:14px; color:#64748b;">Total Issues</div>
+                            <div style="font-size:24px; font-weight:700;" id="previewTotal">0</div>
+                        </div>
+                        <div class="stat-card" style="background:#f8fafc; padding:16px; border-radius:12px;">
+                            <div style="font-size:14px; color:#64748b;">Resolved</div>
+                            <div style="font-size:24px; font-weight:700; color:#10b981;" id="previewResolved">0</div>
+                        </div>
+                        <div class="stat-card" style="background:#f8fafc; padding:16px; border-radius:12px;">
+                            <div style="font-size:14px; color:#64748b;">Pending</div>
+                            <div style="font-size:24px; font-weight:700; color:#f59e0b;" id="previewPending">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="../js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+
+</html>

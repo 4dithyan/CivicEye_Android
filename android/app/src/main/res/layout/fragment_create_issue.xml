@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_lg">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Report Civic Issue"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Just take a photo - AI will handle the rest!"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="@dimen/spacing_xl" />
+
+        <!-- Photo Upload Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPhotoUpload"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/brand_primary">
+
+            <FrameLayout
+                android:id="@+id/framePhotoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <!-- Placeholder -->
+                <LinearLayout
+                    android:id="@+id/layoutPlaceholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_camera"
+                        android:tint="@color/brand_primary"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="📸 Tap to capture issue photo"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/brand_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="AI will analyze automatically"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
+
+                <!-- Image Preview -->
+                <ImageView
+                    android:id="@+id/ivPhotoPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Loading State -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/brand_primary_light">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_md"
+                android:gravity="center_vertical">
+
+                <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:indeterminateTint="@color/brand_primary" />
+
+                <TextView
+                    android:id="@+id/tvLoadingMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="✨ Analyzing image and capturing location..."
+                    android:textSize="14sp"
+                    android:textColor="@color/brand_primary" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Unified AI & Location Result Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAIResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:visibility="gone"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:strokeColor="@color/brand_primary"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="12dp">
+                    
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_check_circle"
+                        android:tint="@color/brand_primary" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Detected Issue Details"
+                        android:textColor="@color/brand_primary"
+                        android:textStyle="bold"
+                        android:textSize="16sp" 
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- 1. ISSUE -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Issue Detected"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"/>
+                    
+                <TextView
+                    android:id="@+id/tvAITitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="2dp"
+                    tools:text="Garbage Heap on Road" />
+
+                <TextView
+                    android:id="@+id/tvAIDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    tools:text="Visual analysis matches large waste pile near curb." />
+
+                <!-- 2. DEPARTMENT -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Department"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/tvAICategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawablePadding="6dp"
+                    android:textStyle="bold"
+                    tools:text="🏢 Municipality" />
+
+                <!-- 3. TIME -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/tvIssueTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:fontFamily="monospace"
+                    tools:text="10:30 AM, 02 Feb 2026" />
+
+                <!-- 4. PLACE (GPS) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Place (GPS Location)"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/tvGPSAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    tools:text="123 MG Road, Kochi" />
+                    
+                <TextView
+                    android:id="@+id/tvGPSCoordinates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:fontFamily="monospace"
+                    tools:text="Lat: 9.9312, Long: 76.2673" />
+
+                <!-- 5. INTENSITY -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Intensity"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/tvAISeverity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/bg_status_badge"
+                    tools:text="HIGH" />
+                    
+                <!-- Confidence (Hidden/Small) -->
+                <TextView
+                    android:id="@+id/tvAIConfidence"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textSize="11sp"
+                    android:gravity="end"
+                    android:textColor="#B0BEC5"
+                    tools:text="AI Confidence: 95%" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Optional Comments -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilComments"
+            style="@style/Widget.CivicEye.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:hint="Additional comments (Optional)">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2"
+                android:maxLines="4"
+                android:gravity="top" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Submit Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmit"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="@dimen/spacing_xl"
+            android:text="Submit Report"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:enabled="true"
+            app:icon="@drawable/ic_send"
+            app:iconGravity="start"
+            android:backgroundTint="@color/brand_primary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="✨ AI will auto-fill all details from your photo"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/text_secondary" />
+
+    </LinearLayout>
+
+</ScrollView>

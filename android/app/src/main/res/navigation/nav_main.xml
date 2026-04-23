@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.civiceye.ui.home.HomeFragment"
+        android:label="Home">
+        <action
+            android:id="@+id/action_home_to_issueDetail"
+            app:destination="@id/issueDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/trackFragment"
+        android:name="com.civiceye.ui.track.TrackFragment"
+        android:label="Track">
+        <action
+            android:id="@+id/action_trackFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/directoryFragment"
+        android:name="com.civiceye.ui.directory.DirectoryFragment"
+        android:label="Staff Directory" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.civiceye.ui.profile.ProfileFragment"
+        android:label="Profile" />
+
+    <fragment
+        android:id="@+id/issueDetailFragment"
+        android:name="com.civiceye.ui.issue.IssueDetailFragment"
+        android:label="Issue Details">
+        <argument
+            android:name="issueId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createIssueFragment"
+        android:name="com.civiceye.ui.issue.CreateIssueFragment"
+        android:label="Report Issue" />
+
+</navigation>

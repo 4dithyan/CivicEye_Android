@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Solved Issues - CivicEye</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .map-container {
+            height: 600px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .map-container.active {
+            display: block;
+        }
+
+        .list-container.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div>
+                    <h1>Solved Issues</h1>
+                    <p style="color:var(--secondary);">Archive of resolved community issues</p>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button class="btn btn-outline" id="btnList" onclick="toggleView('list')">
+                        <span class="material-symbols-rounded">list</span> List
+                    </button>
+                    <button class="btn btn-outline" id="btnMap" onclick="toggleView('map')">
+                        <span class="material-symbols-rounded">map</span> Map
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card" style="padding:16px;">
+                <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                    <select id="sortFilter" class="btn btn-outline" onchange="renderIssues()">
+                        <option value="upvotes">🔥 Highest Upvotes</option>
+                        <option value="recent">🕒 Most Recent</option>
+                        <option value="oldest">📅 Oldest</option>
+                    </select>
+                    <!-- Status Filter Removed as this page is ONLY resolved -->
+                    <div class="search-bar">
+                        <span class="material-symbols-rounded" style="color:#94a3b8;">search</span>
+                        <input type="text" id="search" placeholder="Search issues..." oninput="renderIssues()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- List View -->
+            <div id="listView" class="card list-container" style="padding:0;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Department</th>
+                            <th style="width:25%;">Issue Details</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Support</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="issueTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Map View -->
+            <div id="mapView" class="map-container card">
+                <div id="map" style="width:100%; height:100%;"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="issueModal">
+        <div class="modal-content">
+            <div class="card-header">
+                <h3>Issue Details</h3>
+                <button onclick="closeModal()" class="btn btn-sm btn-outline"><span
+                        class="material-symbols-rounded">close</span></button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTfbNw3jeYg9MaRYozySG-TrfSXZxMwSI&callback=initMap"
+        async defer></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/issue-logic.js"></script>
+
+    <script>
+        let viewMode = 'list';
+
+        function renderIssues() {
+            const sortFilter = document.getElementById('sortFilter');
+            if (!sortFilter) return;
+            const sort = sortFilter.value;
+
+            const searchEl = document.getElementById('search');
+            const searchQuery = searchEl ? searchEl.value.toLowerCase() : '';
+
+            // Filter ONLY Resolved/Verified
+            let filtered = issues.filter(i => {
+                const isResolved = i.status === 'resolved' || i.status === 'verified';
+                const matchesSearch = !searchQuery ||
+                    (i.title && i.title.toLowerCase().includes(searchQuery)) ||
+                    (i.description && i.description.toLowerCase().includes(searchQuery)) ||
+                    (i.category && i.category.toLowerCase().includes(searchQuery));
+                return isResolved && matchesSearch;
+            });
+
+            // Sort
+            if (sort === 'upvotes') filtered.sort((a, b) => (b.supportCount || 0) - (a.supportCount || 0));
+            else if (sort === 'recent') filtered.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+            else filtered.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+
+            // Render Table
+            const tbody = document.getElementById('issueTableBody');
+            if (tbody) {
+                tbody.innerHTML = filtered.map(i => `
+                    <tr>
+                        <td>
+                            <img src="${i.images?.[0] || 'https://via.placeholder.com/50'}" 
+                                 style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
+                        </td>
+                        <td>
+                            <span class="badge" style="background:#e2e8f0; color:#475569;">${i.category || 'General'}</span>
+                        </td>
+                        <td>
+                            <strong>${i.title}</strong>
+                            <div class="text-secondary" style="font-size:0.85rem; margin-top:4px;">
+                                 ${i.description || 'No description provided'}
+                            </div>
+                        </td>
+                        <td>${i.address || 'Unknown'}</td>
+                        <td>
+                            <span class="badge ${getStatusBadge(i.status)}">${i.status.toUpperCase().replace('_', ' ')}</span>
+                        </td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:4px; color:var(--primary); font-weight:700;">
+                                <span class="material-symbols-rounded" style="font-size:18px;">thumb_up</span>
+                                ${i.supportCount || 0}
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="openIssue('${i.id}')">
+                               View Details
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            updateMap(filtered);
+        }
+
+        loadData(renderIssues);
+    </script>
+</body>
+
+</html>

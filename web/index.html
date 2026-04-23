@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CivicEye - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        body {
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+            outline: none;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+
+
+        .error-msg {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <div style="text-align: center; margin-bottom: 24px;">
+            <svg viewBox="0 0 80 80" width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="72" height="72" rx="16" fill="#1E3A8A" />
+                <path fill="#FFFFFF"
+                    d="M40,22c-7.732,0 -14,6.268 -14,14c0,10.5 14,22 14,22s14,-11.5 14,-22C54,28.268 47.732,22 40,22zM40,41c-2.761,0 -5,-2.239 -5,-5s2.239,-5 5,-5s5,2.239 5,5S42.761,41 40,41z" />
+                <path fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                    d="M37,36l2,2l5,-5" />
+            </svg>
+            <h1 style="font-size: 28px; font-weight: 800; color: #1e293b; margin-top: 16px; letter-spacing: -0.5px;">
+                CivicEye</h1>
+            <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Report. Support. Resolve.</p>
+        </div>
+
+        <div style="background: #f8fafc; padding: 24px; border-radius: 20px; border: 1px solid #f1f5f9;">
+            <h2 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 20px;">Login</h2>
+
+            <form id="loginForm">
+                <div id="errorBox" class="error-msg">
+                    <span class="material-symbols-rounded" style="font-size:18px;">error</span>
+                    <span id="errorText"></span>
+                </div>
+
+                <div class="input-group">
+                    <span class="material-symbols-rounded input-icon">mail</span>
+                    <input type="email" id="email" class="input-field" placeholder="Email" required>
+                </div>
+
+                <div class="input-group">
+                    <span class="material-symbols-rounded input-icon">lock</span>
+                    <input type="password" id="password" class="input-field" placeholder="Password" required>
+                    <span class="material-symbols-rounded"
+                        style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 20px; cursor: pointer;">visibility</span>
+                </div>
+
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="#" style="font-size: 13px; color: #475569; text-decoration: none; font-weight: 500;">Forgot
+                        Password?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn"
+                    style="background: #1e3a8a; height: 52px; font-size: 15px;">
+                    <span>Login</span>
+                </button>
+            </form>
+        </div>
+
+        <div style="margin-top: 32px; text-align: center;">
+            <p style="font-size: 14px; color: #64748b;">
+                Don't have an account? <a href="#"
+                    style="color: #1e3a8a; text-decoration: none; font-weight: 700;">Create Account</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+
+    <script>
+        // Check Auth Status
+        auth.onAuthStateChanged(async (user) => {
+            if (user) await redirectUser(user);
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const errBox = document.getElementById('errorBox');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-rounded" style="animation:spin 1s linear infinite">refresh</span> Signing in...';
+            errBox.style.display = 'none';
+
+            try {
+                const email = document.getElementById('email').value;
+                const pwd = document.getElementById('password').value;
+                const cred = await auth.signInWithEmailAndPassword(email, pwd);
+                await redirectUser(cred.user);
+            } catch (e) {
+                let msg = "Login failed";
+                if (e.code === 'auth/user-not-found') msg = "User not found";
+                if (e.code === 'auth/wrong-password') msg = "Invalid password";
+
+                document.getElementById('errorText').textContent = msg;
+                errBox.style.display = 'flex';
+                btn.disabled = false;
+                btn.innerHTML = '<span>Sign In</span><span class="material-symbols-rounded">arrow_forward</span>';
+            }
+        });
+
+        async function redirectUser(user) {
+            try {
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (!doc.exists) throw new Error('User profile not found');
+
+                const data = doc.data();
+                if (data.isBlocked) throw new Error('Account blocked');
+
+                if (data.role === 'admin') window.location.href = 'admin/index.html';
+                else if (data.role === 'staff') window.location.href = 'admin/staff.html'; 
+                else {
+                    await auth.signOut();
+                    throw new Error('Access denied: Mobile app users cannot login here.');
+                }
+            } catch (e) {
+                await auth.signOut();
+                document.getElementById('errorText').textContent = e.message;
+                document.getElementById('errorBox').style.display = 'flex';
+                const btn = document.getElementById('loginBtn');
+                btn.disabled = false;
+                btn.innerHTML = '<span>Sign In</span><span class="material-symbols-rounded">arrow_forward</span>';
+            }
+        }
+    </script>
+</body>
+
+</html>

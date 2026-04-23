@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.CivicEye.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    
+    <style name="CircleImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Base application theme -->
+    <style name="Theme.CivicEye" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary colors - Using Brand Navy Blue like web -->
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
+        <item name="colorPrimaryVariant">@color/brand_primary_light</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        
+        <!-- Secondary colors - Civilian Green as accent -->
+        <item name="colorSecondary">@color/civilian_primary</item>
+        <item name="colorSecondaryVariant">@color/civilian_primary_dark</item>
+        <item name="colorOnSecondary">@color/text_on_primary</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/brand_primary</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        
+        <!-- Error color -->
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/text_on_primary</item>
+        
+        <!-- Divider -->
+        <item name="android:listDivider">@color/divider</item>
+    </style>
+    
+    <!-- Splash Screen Theme -->
+    <style name="Theme.CivicEye.Splash" parent="Theme.CivicEye">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">@color/brand_primary</item>
+    </style>
+    
+    <!-- Text Styles -->
+    <style name="TextAppearance.CivicEye.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <style name="TextAppearance.CivicEye.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <style name="TextAppearance.CivicEye.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <style name="TextAppearance.CivicEye.Subtitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    
+    <style name="TextAppearance.CivicEye.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    
+    <style name="TextAppearance.CivicEye.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <!-- Button Styles -->
+    <style name="Widget.CivicEye.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/brand_primary</item>
+        <item name="android:textColor">@color/text_on_primary</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+    
+    <style name="Widget.CivicEye.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/brand_primary</item>
+        <item name="android:textColor">@color/brand_primary</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+    
+    <style name="Widget.CivicEye.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/brand_primary</item>
+    </style>
+    
+    <!-- Card Style -->
+    <style name="Widget.CivicEye.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+    
+    <!-- Input Field Style -->
+    <style name="Widget.CivicEye.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/border</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- Chip Style -->
+    <style name="Widget.CivicEye.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/surface_variant</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Bottom Navigation Style -->
+    <style name="Widget.CivicEye.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/surface</item>
+        <item name="itemIconTint">@color/bottom_nav_colors</item>
+        <item name="itemTextColor">@color/bottom_nav_colors</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+</resources>
